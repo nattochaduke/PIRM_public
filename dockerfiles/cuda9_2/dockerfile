@@ -1,0 +1,70 @@
+
+FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04
+
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    sudo \
+    locales \
+    fonts-liberation \
+    python3-dev \ 
+    python3-pip \
+    python3-wheel \
+    python3-setuptools \
+    git \
+    wget \
+    autoconf \
+    libtool \
+    automake \
+    libx11-6 &&\
+    rm -rf /var/lib/apt/lists/*	/var/cache/apt/archives/*
+
+RUN pip3 install --no-cache-dir cupy-cuda92==5.0.0b3 chainer==5.0.0b3 chainercv==0.10.0 chainer-chemistry
+RUN pip3 install http://download.pytorch.org/whl/cu91/torch-0.4.0-cp36-cp36m-linux_x86_64.whl 
+RUN pip3 install torchvision
+RUN pip3 install numpy scipy pandas sklearn joblib bokeh
+RUN pip3 install jupyter
+RUN pip3 install tifffile
+RUN pip3 install matplotlib
+RUN pip3 install glob3
+RUN pip3 install opencv-python
+RUN pip3 install pretrainedmodels
+ENV TZ Asia/Tokyo
+RUN apt-get update \
+  && apt-get -y --no-install-recommends install libglib2.0-0
+RUN apt-get -y --no-install-recommends install libsm6 libxext6
+RUN apt-get -y --no-install-recommends install libxrender-dev
+RUN apt-get -y --no-install-recommends install flex
+RUN git clone --depth=1 -b v3.1.1 https://github.com/open-mpi/ompi.git /tmp/ompi \
+  && cd /tmp/ompi \
+  && ./autogen.pl \
+  && ./configure --with-cuda \
+  && make -j4 \
+  && make install \
+  && rm -rf /tmp/ompi
+COPY . /tmp
+RUN dpkg -i /tmp/nccl-repo-ubuntu1604-2.2.13-ga-cuda9.2_1-1_amd64.deb
+RUN apt-get install -y libnccl2 libnccl-dev
+RUN pip3 install mpi4py
+RUN pip3 install chainermn
+
+RUN mkdir /host_mount
+WORKDIR host_mount
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+  && apt-get install -y tzdata \
+  && rm -rf /var/lib/apt/lists/* \
+  && echo "${TZ}" > /etc/timezone \
+  && rm /etc/localtime \
+  && ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+  && dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get update
+RUN apt-get -y install python3-tk
+RUN apt-get -y install nano
+RUN apt-get -y install ssh
+RUN pip3 install chainerui
+RUN sed -i s/TkAgg/Agg/g  /usr/local/lib/python3.6/dist-packages/matplotlib/mpl-data/matplotlibrc
+# CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
