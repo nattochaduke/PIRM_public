@@ -40,7 +40,6 @@ def main():
                         help='Number of images in each mini-batch')
     parser.add_argument('--learning_rate', type=float, default=1e-4,
                         help="learning rate.")
-    parser.add_argument('--target_zero_mean', type=str, default="False")
     parser.add_argument('--bands',type=str, default="0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13")
     parser.add_argument('--patchsize', type=int, default=48)
     parser.add_argument('--image_concat', type=float, default=0, help='vertial concat augmentation happenning ratio, in [0, 1].')

@@ -41,7 +41,6 @@ def main():
                         help='Number of images in each mini-batch')
     parser.add_argument('--learning_rate', type=float, default=1e-4,
                         help="learning rate.")
-    parser.add_argument('--target_zero_mean', type=str, default="False")
     parser.add_argument('--bands',type=str, default="0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13")
     parser.add_argument('--patchsize', type=int, default=64)
     parser.add_argument('--image_concat', type=float, default=0, help='vertial concat augmentation happenning ratio, in [0, 1].')
@@ -68,15 +67,6 @@ def main():
 
     bands = list(map(int, args.bands.split(',')))
     loss_coeffs = list(map(float, args.loss_coeffs.split(',')))
-
-    if args.target_zero_mean == "False":
-        train_target = 'data/PIRMt1/normalized/train_hr.npy'
-        val_target = 'data/PIRMt1/normalized/val_hr.npy'
-    elif args.target_zero_mean == "True":
-        train_target = 'data/PIRMt1/normalized/train_hr_zeromean.npy'
-        val_target = 'data/PIRMt1/normalized/val_hr_zeromean.npy'
-    else:
-        raise ValueError("argument target_zero_mean must be 'True' or 'False'")
 
     if args.last_relu == "True":
         last_relu = True
@@ -113,7 +103,7 @@ def main():
     if len(args.resume) > 0:
         chainer.serializers.load_npz(args.resume, model)
     model = super_resolution.SuperResolution(model, device=args.device_index, loss_coeffs=loss_coeffs,
-                                             target_zeromean=False, last_relu=last_relu, calc_sid=calc_sid)
+                                             last_relu=last_relu, calc_sid=calc_sid)
     if device_id >= 0:
         model.to_gpu(device_id)
 
