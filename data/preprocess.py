@@ -84,10 +84,12 @@ os.makedirs('PIRMt1/normalized/', exist_ok=True)
 t1_train_hr = sorted(glob.glob('PIRMt1/training_hr/*.hdr'))
 t1_train_lr = sorted(glob.glob('PIRMt1/training_lr/*lr3.hdr'))
 t1_val_lr = sorted(glob.glob('PIRMt1/validation_lr/*lr3.hdr'))
+t1_val_hr = sorted(glob.glob('PIRMt1/validation_hr/*.hdr'))
 t1_test_lr = sorted(glob.glob('PIRMt1/testing_lr/*lr3.hdr'))
 
 # We conduct mean subtraction on training samples.
 _ = normalize(t1_train_hr, 'PIRMt1/normalized/train_hr.npy', zero_mean=False)
+_ = normalize(t1_val_hr, 'PIRMt1/normalized/val_hr.npy', zero_mean=False)
 lr_means = normalize(t1_train_lr, 'PIRMt1/normalized/train_lr3.npy', zero_mean=True)
 _ = normalize(t1_val_lr, 'PIRMt1/normalized/val_lr3.npy', zero_mean=True, means=lr_means)
 _ = normalize(t1_test_lr, 'PIRMt1/normalized/testing_lr3_data.npy', zero_mean=True, means=lr_means)
