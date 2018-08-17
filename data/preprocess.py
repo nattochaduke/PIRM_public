@@ -142,7 +142,7 @@ t2_test_color_unreg_lr = sorted(glob.glob('PIRMt2/testing_lr/*lr3_unregistered.t
 
 
 _ = normalize(t2_val_spec_lr, 'PIRMt2/normalized/val_spec_lr.npy', means=spec_lr_means, zero_mean=True)
-_ = normalize(t2_val_color_unreg_lr, 'PIRMt2/normalized/val_spec_hr.npy', means=color_unreg_lr_means, zero_mean=False)
+_ = normalize(t2_val_spec_hr, 'PIRMt2/normalized/val_spec_hr.npy', zero_mean=False)
 
 _ = normalize(t2_val_color_reg_lr, 'PIRMt2/normalized/val_color_reg_lr.npy', means=color_reg_lr_means, zero_mean=True)
 _ = normalize(t2_val_color_unreg_lr, 'PIRMt2/normalized/val_color_unreg_lr.npy', means=color_unreg_lr_means, zero_mean=True)
